@@ -37,7 +37,7 @@ def get_args(argv):
 
     parser.add_argument(
         'recovery_mode',
-        choices=['2of2', '2of3'],
+        choices=['2of2'],
         default='2of2',
         help='Type of recovery to perform')
     parser.add_argument(
@@ -111,63 +111,15 @@ def get_args(argv):
         help='Timeout in minutes for rpc calls')
 
     two_of_two = parser.add_argument_group('2of2 options')
-    two_of_two.add_argument(
-        '--nlocktime-file',
-        help='Name of the nlocktime file sent from GreenAddress')
 
-    two_of_three = parser.add_argument_group('2of3 options')
-    two_of_three_xpub_exclusive = two_of_three.add_mutually_exclusive_group(required=False)
-    two_of_three_xpub_exclusive.add_argument(
-        '--ga-xpub',
-        help='The GreenAddress extended public key. If not provided the recovery tool will '
-             'attempt to derive it')
-    two_of_three_xpub_exclusive.add_argument(
-        '--search-subaccounts',
-        nargs='?',
-        const=DEFAULT_SUBACCOUNT_SEARCH_DEPTH,
-        type=int,
-        help='If --ga-xpub is not known it is possible to search subaccounts using this option')
-
-    two_of_three_backup_key_exclusive = two_of_three.add_mutually_exclusive_group(required=False)
-    two_of_three_backup_key_exclusive.add_argument(
-        '--recovery-mnemonic-file',
-        dest='recovery_mnemonic_file',
-        help="Name of file containing the user's recovery mnemonic (2 of 3)")
-    two_of_three_backup_key_exclusive.add_argument(
-        '--custom-xprv',
-        help='Custom xprv (extended private key) for the 2of3 account. '
-             'Only required if an xpub was specified when creating the subaccount')
-
-    basic_2of3 = two_of_three.add_argument_group('Basic options')
-    basic_2of3.add_argument(
-        '--rescan',
-        action='store_true',
-        help='Rescan the blockchain (or scan file) looking for available '
-             '2 of 3 transactions. Can be slow.')
-
-    advanced_2of3 = two_of_three.add_argument_group('Advanced options')
-    advanced_2of3.add_argument(
-        '--key-search-depth',
-        type=int,
-        default=DEFAULT_KEY_SEARCH_DEPTH,
-        help='When scanning for 2of3 transactions search this number of keys')
-    advanced_2of3.add_argument(
-        '--scan-from',
-        type=int,
-        dest='scan_from',
-        default=DEFAULT_SCAN_FROM,
-        help='Start scanning the blockchain for transactions from this timestamp. '
-             'Scanning the blockchain is slow so if you know your transactions were all after '
-             'a certain date you can speed it up by restricting the search range with this '
-             'option. Defaults to the inception time of GreenAddress. Pass 0 to scan the entire '
-             'blockchain.')
-    advanced_2of3.add_argument(
-        '--fee-estimate-blocks',
-        dest='fee_estimate_blocks',
-        type=int,
-        default=DEFAULT_FEE_ESTIMATE_BLOCKS,
-        help='Use a transaction fee likely to result in a transaction being '
-             'confirmed in this many blocks minimum')
+    # two_of_two.add_argument(
+    #     '--satoshis',
+    #     type=int,
+    #     help='Exact number of Satoshis (BTC * 10^8) ending up in your GA wallet after the transaction. https://www.screencast.com/t/zNHS9vVXYlGP')
+    # two_of_two.add_argument(
+    #     '--ga-address-pointer',
+    #     type=int,
+    #     help='Index of the transaction in your GreenAddress history. First transaction is 1, second is 2, and so on.')
 
     argcomplete.autocomplete(parser)
     result = parser.parse_args(argv[1:])
@@ -186,17 +138,12 @@ def get_args(argv):
             parser.error('%s not allowed for mode %s' % (name, result.recovery_mode))
 
     if result.recovery_mode == '2of2':
-        arg_required('--nlocktime-file')
-        arg_required('--destination-address')
+        #arg_required('--satoshis')
+        #arg_required('--ga-address-pointer')
+        #arg_required('--destination-address')
         for arg in ['--ga-xpub', '--search-subaccounts',
                     '--recovery-mnemonic-file', '--custom-xprv']:
             arg_disallowed(arg)
-
-    elif result.recovery_mode == '2of3':
-        arg_disallowed('--nlocktime-file')
-        arg_required('--destination-address')
-        if optval('search_subaccounts') is None:
-            arg_required('--ga-xpub', '--ga-xpub or --search-subaccounts')
 
     result.login_data = None
     return result

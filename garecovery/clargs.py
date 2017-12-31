@@ -45,8 +45,8 @@ def get_args(argv):
         help='Show a summary of the transactions available to recover')
     parser.add_argument(
         '--units',
-        choices=['BTC', 'mBTC', 'uBTC', 'bit', 'sat'],
-        default='BTC',
+        choices=['BCH', 'mBCH', 'uBCH', 'bit', 'sat'],
+        default='BCH',
         dest='units',
         help='Units to display amounts')
     parser.add_argument(

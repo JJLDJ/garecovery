@@ -6,12 +6,12 @@ from . import clargs
 from . import util
 
 
-def btc(amount_satoshis, units='BTC'):
+def btc(amount_satoshis, units='BCH'):
     """Given an amount in satoshis return a display string"""
     divisor = {
-        'BTC': 1e8,
-        'mBTC': 1e5,
-        'uBTC': 1e2,
+        'BCH': 1e8,
+        'mBCH': 1e5,
+        'uBCH': 1e2,
         'bit': 1e2,
         'sat': 1}[units]
     amount = amount_satoshis/divisor

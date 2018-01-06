@@ -376,9 +376,3 @@ def lookup_ga_address_pointer(target_address):
         ga_page_min_pointer = ga_addresses[-1]['pointer']
 
     return ga_address_pointer
-
-def extract_redeem_script(signed_input_script_hex):
-    '''Extracts and returns the redeem script from the end of the specified scriptsig (signed_input_script_hex).
-
-
-    '''
